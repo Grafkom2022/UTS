@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="../Common/layout.css">
+    <title>Midpointline</title>
+</head>
+
+<body>
+    <div class="header">
+        <h2>Midpointline</h2>
+    </div>
+    <canvas id="gl-canvas" width="800" height="800"> </canvas>
+    <br>
+    <div class="footer">
+        <input type="button" id="wind-directions" class="btn btn-dark" value="Wind Directions">
+        <input type="button" id="octagram" class="btn btn-dark" value="Octagram">
+        <input type="button" id="fan-spread" class="btn btn-dark" value="Fan Spread">
+        <br>
+        <br>
+        <h2>Fathan Muhammad - 2006486090</h2>
+        <h2>Razita Afrina Nuriyan - 2006529360</h2>
+        <h2>UTS Grafika Komputer - Fasilkom UI</h2>
+    </div>
+
+    <script id="vertex-shader" type="x-shader/x-vertex">
+
+        #version 300 es
+
+in vec4 aPosition;
+in vec4 aColor;
+
+out vec4 vColor;
+
+void
+main()
+{
+    gl_Position = aPosition;
+    vColor = aColor;
+    gl_PointSize = 5.0;
+}
+</script>
+
+    <script id="fragment-shader" type="x-shader/x-fragment">
+        #version 300 es
+precision mediump float;
+
+in vec4 vColor;
+out vec4 fColor;
+
+void
+main()
+{
+    fColor = vColor;
+}
+</script>
+
+    <script src="../Common/initShaders.js"></script>
+    <script src="../Common/MVnew.js"></script>
+    <script src="midpointline.js"></script>
+
+</body>
+
+</html>
