@@ -6,25 +6,25 @@ var canvas;
 var gl;
 
 // parameter variables
+var middlewidth;
 var primitiveType;
 var offset = 0;
 var translation;
 var rotation = [0,0,0];
 var scale = [1.0,1.0,1.0]; //default scale
 var currentposition = 0;
-var currentscale = 0.005;
-var movement = 10;
-var scalefactor = 0.005;
-var maxscale = 1;
-var minscale = 0.005;
+var currentscale = 0.5;
 var angle = 0;
 var angleInRadians;
 var posDegX = 0;
 var posDegY = 0;
 var posDegFlag = 0;
+var Oedge = 90;
+var Hedge = 50;
+var H1dist = 90;
+var H2dist = 210;
 
 // matrix variables
-var matrix;
 var matrixLocation;
 var translationMatrix;
 var rotationMatrix;
@@ -37,11 +37,6 @@ var positionBuffer;
 var positionLocation;
 var colorBuffer;
 var colorLocation;
-
-// misc variables
-var middlewidth;
-var temp;
-
 
 window.onload = function init()
 {
@@ -81,6 +76,7 @@ window.onload = function init()
 	
 	primitiveType = gl.TRIANGLES;
   middlewidth = Math.floor(gl.canvas.width/2);
+  translation = [middlewidth,gl.canvas.height/2,0];
   
 	render(); //default render
 }
@@ -89,7 +85,6 @@ window.onload = function init()
 function render() 
 {
   // update angle based on revolution
-  currentscale = 0.5;
 	
   if (angle != 0 && angle%90 == 0) {
     if (posDegX == 180 && posDegY == 180) posDegFlag = 1;
@@ -110,8 +105,7 @@ function render()
   }
 
 	angle += 1.0;
-  console.log(posDegX,posDegY);
-	angleInRadians = 360 + (angle * Math.PI/180); //rotating counter clockwise
+	angleInRadians = 360 + (angle * Math.PI/180); // rotating counter clockwise
 	
   // clear buffer before rendering object
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -125,15 +119,13 @@ function drawobjectO() {
   var side = 6;
   var count = side*6;
 
-	translation = [middlewidth,gl.canvas.height/2,0];
-
   // bind buffers before setting geometry and colors
   gl.bindBuffer( gl.ARRAY_BUFFER, positionBuffer );
   setGeometry(gl,0);
   gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
   setColors(gl,0);
 	// Compute the matrices
-  matrix = m4.projection(gl.canvas.clientWidth, gl.canvas.clientHeight, 4000);
+  var matrix = m4.projection(gl.canvas.clientWidth, gl.canvas.clientHeight, 4000);
   matrix = m4.translate(matrix, translation[0]-currentposition/2, translation[1], translation[2]);  // move object to center of canvas
   matrix = m4.yRotate(matrix, rotation[1]-angleInRadians);  // rotate object counter clockwise from center
   matrix = m4.scale(matrix, scale[0]+currentscale, scale[1]+currentscale, scale[2]+currentscale); // scale object model
@@ -146,9 +138,8 @@ function drawobjectO() {
 function drawobjectH1() {
   var side = 6;
   var count = side*6;
-  var distance = 90;
 
-  var og_offset = Oedge+distance;
+  var og_offset = Oedge+H1dist;
 
   // bind buffers before setting geometry and colors
   gl.bindBuffer( gl.ARRAY_BUFFER, positionBuffer );
@@ -157,7 +148,7 @@ function drawobjectH1() {
   setColors(gl,1);
   
   // Compute the matrices
-  matrix = m4.projection(gl.canvas.clientWidth, gl.canvas.clientHeight, 4000);
+  var matrix = m4.projection(gl.canvas.clientWidth, gl.canvas.clientHeight, 4000);
   matrix = m4.translate(matrix, og_offset*Math.cos(degToRad(posDegX)),-og_offset*Math.cos(degToRad(posDegY)),0);  // move object to 2 o'clock position from center
   matrix = m4.translate(matrix, translation[0]+currentposition/2, translation[1], translation[2]);  // move object to center of canvas
 
@@ -184,10 +175,8 @@ function drawobjectH1() {
 function drawobjectH2() {
   var side = 6;
   var count = side*6;
-  var distance = 210;
 
-  var og_offset = Oedge+distance;
-  translation = [middlewidth,gl.canvas.height/2,0];
+  var og_offset = Oedge+H2dist;
 
   // bind buffers before setting geometry and colors
   gl.bindBuffer( gl.ARRAY_BUFFER, positionBuffer );
@@ -196,7 +185,7 @@ function drawobjectH2() {
   setColors(gl,2);
   
   // Compute the matrices
-  matrix = m4.projection(gl.canvas.clientWidth, gl.canvas.clientHeight, 4000);
+  var matrix = m4.projection(gl.canvas.clientWidth, gl.canvas.clientHeight, 4000);
   matrix = m4.translate(matrix, -og_offset*Math.cos(degToRad(posDegX)),-og_offset*Math.cos(degToRad(posDegY)),0);  // move object to 2 o'clock position from center
   matrix = m4.translate(matrix, translation[0]+currentposition/2, translation[1], translation[2]);  // move object to center of canvas
 
@@ -371,7 +360,6 @@ var m4 = {
 };
 
 // create object outline
-var Oedge = 90;
 var OobjectArray = [
   
   // front
@@ -422,8 +410,6 @@ var OobjectArray = [
   Oedge,Oedge,0,
   Oedge,Oedge,Oedge,
 ]
-
-var Hedge = 50;
 var HobjectArray = [
   
   // front
@@ -487,6 +473,7 @@ function colorSide(x,y,z) {
 
 // Fill geometry in buffer according to index
 function setGeometry(gl,shapeIndex) {
+  var temp;
   if (shapeIndex == 0) temp = OobjectArray;
   else if (shapeIndex == 1) temp = HobjectArray;
   gl.bufferData(
@@ -512,17 +499,18 @@ var H1Color = [].concat(
   colorSide(150,0,0), // u
   colorSide(80,0,0), // d
   );
-  var H2Color = [].concat(
-    colorSide(0,255,0), // f
-    colorSide(0,100,0), // b
-    colorSide(0,200,0), // l
-    colorSide(0,120,0), // r
-    colorSide(0,150,0), // u
-    colorSide(0,80,0), // d
-    );
+var H2Color = [].concat(
+  colorSide(0,255,0), // f
+  colorSide(0,100,0), // b
+  colorSide(0,200,0), // l
+  colorSide(0,120,0), // r
+  colorSide(0,150,0), // u
+  colorSide(0,80,0), // d
+  );
 
 // Fill color in buffer according to index
 function setColors(gl,colorIndex) {
+  var temp;
   if (colorIndex == 0) temp = OColor;
   else if (colorIndex == 1) temp = H1Color;
   else if (colorIndex == 2) temp = H2Color;

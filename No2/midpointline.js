@@ -5,20 +5,11 @@ var canvas;
 /** @type {WebGLRenderingContext} */
 var gl;
 
-
 var maxPoints = 5000;
 var maxNumPositions  = 3*maxPoints;
 var index = 0;
-
-var colors = [
-    vec4(0.0, 0.0, 0.0, 1.0),  // black
-    vec4(1.0, 0.0, 0.0, 1.0),  // red
-    vec4(1.0, 1.0, 0.0, 1.0),  // yellow
-    vec4(0.0, 1.0, 0.0, 1.0 ),  // green
-    vec4(0.0, 0.0, 1.0, 1.0),  // blue
-    vec4(1.0, 0.0, 1.0, 1.0),  // magenta
-    vec4(0.0, 1.0, 1.0, 1.0)   // cyan
-];
+var midpoints = [];
+var pointAccuracy = 0.02;  // range from 0 to 1
 
 // program variables
 var program;
@@ -26,11 +17,7 @@ var vBuffer;
 var positionLoc;
 var cBuffer;
 var colorLoc;
-var t;
-var pointAccuracy = 0.02;  // range (0,1)
-var temp;
 
-var midpoints = [];
 window.onload = function init() {
     canvas = document.getElementById("gl-canvas");
 
@@ -51,23 +38,23 @@ window.onload = function init() {
     // set points from event
     document.getElementById("wind-directions").addEventListener("click",function() {
         initvBuffer();
-        mplx(-1,1,1,-1);      // nw to se
-        mplx(-1,-1,1,1);       // sw to ne
-        mplx(-1,0,1,0);        // w to e
-        mply(0,-1,0,1);    // s to n
+        mplx(-1,1,1,-1);    // nw to se
+        mplx(-1,-1,1,1);    // sw to ne
+        mplx(-1,0,1,0);     // w to e
+        mply(0,-1,0,1);     // s to n
         draw();
     });
     document.getElementById("octagram").addEventListener("click",function() {
         initvBuffer();
-        mplx(-1,0,1,1);      // w to ne
-        mplx(-1,0,1,-1);      // w to se
-        mplx(-1,-1,1,0);      // sw to e
-        mplx(-1,1,1,0);      // nw to e
+        mplx(-1,0,1,1);     // w to ne
+        mplx(-1,0,1,-1);    // w to se
+        mplx(-1,-1,1,0);    // sw to e
+        mplx(-1,1,1,0);     // nw to e
 
-        mply(-1,-1,0,1);      // sw to n
-        mply(1,-1,0,1);      // se to n
-        mply(0,-1,-1,1);      // s to nw
-        mply(0,-1,1,1);      // s to ne
+        mply(-1,-1,0,1);    // sw to n
+        mply(1,-1,0,1);     // se to n
+        mply(0,-1,-1,1);    // s to nw
+        mply(0,-1,1,1);     // s to ne
         draw();
     });
     document.getElementById("fan-spread").addEventListener("click",function() {
@@ -75,7 +62,6 @@ window.onload = function init() {
         for (var i=-1;i<=1;i+=0.1) mply(i,-1,-1,1);
         draw();
     });
-    
     
     draw();
 
@@ -163,7 +149,7 @@ function draw() {
     // load data to buffer
     for (let i in midpoints) {
         gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
-        t = midpoints[i];
+        var t = midpoints[i];
         gl.bufferSubData(gl.ARRAY_BUFFER, 8*index, flatten(t));
 
         gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
