@@ -1,0 +1,68 @@
+.main {
+    left: -13%;
+}
+.sidebar {
+    right: -10%;
+    max-height: 610.95px;
+}
+h1, h2 {
+    padding-left: 0.1em;
+    padding-bottom: 0.1em;
+    font-family: 'Yeseva One', cursive;
+}
+h1 {
+    padding-top: 0.4em;
+    font-size: 2.6rem;
+}
+h2 {
+    padding-top: 0.3em;
+    padding-left: 0.4em;
+}
+.text, .hint {
+    padding-left: 0.1em;
+    font-family: 'News Cycle', sans-serif;
+    letter-spacing: 2px;
+}
+.hint {
+    padding-top: 1em;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+}
+.bottom {
+    position: absolute;
+    bottom: 0;
+    padding-left: 0.1em;
+    padding-bottom: 2em;
+}
+.buttons-1 {
+    padding: 0.9em 1.5em 1.2em 0;
+}
+.buttons-2, .timer-row {
+    padding-right: 1.2em;
+    font-family: 'News Cycle', sans-serif;
+    letter-spacing: 2px;
+}
+.btn-custom {
+    letter-spacing: 2px;
+}
+.timer {
+    text-align: right;
+}
+.change-color {
+    min-width: 100%;
+    font-weight: 700;
+}
+.win-message {
+    margin-top: 0.9em;
+    padding-left: 0.1em;
+    padding-bottom: 0.9em;
+    padding-right: 0.1em;
+    font-family: 'News Cycle', sans-serif;
+    letter-spacing: 2px;
+}
+.win-message .hint {
+    padding-left: 1.2em;
+}
+.stats {
+    padding-left: 0.8em;
+}
