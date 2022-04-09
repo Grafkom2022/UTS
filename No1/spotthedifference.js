@@ -1,5 +1,7 @@
 "use strict";
 
+// Texture source code from https://www.youtube.com/watch?v=3lEs4fKmor8 & https://webgl2fundamentals.org/webgl/lessons/webgl-picking.html
+
 var canvas;
 var gl;
 
@@ -197,103 +199,7 @@ window.onload = function init()
 		// Bind framebuffer & redraw to read color
 		gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
 		gl.clear( gl.COLOR_BUFFER_BIT );
-
-		if (!isStopped) {
-			currentposition = (leftToRight) ? currentposition + movement : currentposition - movement;
-			currentscale = (scaleUp) ? currentscale + scalefactor : currentscale - scalefactor;
-			angle = (counterclockwise) ? angle + 1.0 : angle - 1.0;
-		}
-		
-		if (currentposition > 1099.71) {
-			currentposition = 1099.71;
-			movement = -movement;
-			
-		}; 
-		if (currentposition < 0) {
-			currentposition = 0; 
-			movement = -movement;
-		}; 
-	
-		if (currentscale > 0.35){
-			currentscale = 0.35;
-			scalefactor = -scalefactor;
-		};
-		
-		if (currentscale < 0.005){
-			currentscale = 0.005;
-			scalefactor = -scalefactor;
-		};	
-
-		for(var i = 0; i < 5; i++) {
-			for(var j = 0; j < 9; j++) {
-				drawSquare(j*122.19, i*122.19);
-				if ((j + i * 9) % 2 == 0) {
-					gl.uniform4f(colorUniformLocation, lightCheckerColor[0], lightCheckerColor[1], lightCheckerColor[2], 1);
-				} else {
-					gl.uniform4f(colorUniformLocation, darkCheckerColor[0], darkCheckerColor[1], darkCheckerColor[2], 1)
-				}
-			}
-		}
-	
-		for(var i = 0; i < 5; i++) {
-			for(var j = 0; j < 9; j++) {
-				if ((j + i * 9) == differentColorLocation1) {
-					if ((j + i * 9) % 2 == 0) {
-						gl.uniform4f(colorUniformLocation, darkDiffColor[0], darkDiffColor[1], darkDiffColor[2], 1);
-						drawTriangleFlower(j*122.19, i*122.19);
-					} else {
-						gl.uniform4f(colorUniformLocation, lightDiffColor[0], lightDiffColor[1], lightDiffColor[2], 1);
-						drawDiamondFlower(j*122.19, i*122.19);
-					}
-				} else {
-					if ((j + i * 9) % 2 == 0) {
-						gl.uniform4f(colorUniformLocation, darkFlowerColor[0], darkFlowerColor[1], darkFlowerColor[2], 1);
-						drawTriangleFlower(j*122.19, i*122.19);
-					} else {
-						gl.uniform4f(colorUniformLocation, lightFlowerColor[0], lightFlowerColor[1], lightFlowerColor[2], 1);
-						drawDiamondFlower(j*122.19, i*122.19);
-					}
-				}
-			}
-		}
-
-		gl.uniform4f(colorUniformLocation, lightCheckerColor[0], lightCheckerColor[1], lightCheckerColor[2], 1);
-	
-		
-		for(var i = 0; i < 5; i++) {
-			for(var j = 0; j < 9; j++) {
-				drawSquare(j*122.19 - 1099.71, i*122.19);
-				if ((j + i * 9) % 2 == 0) {
-					gl.uniform4f(colorUniformLocation, darkCheckerColor[0], darkCheckerColor[1], darkCheckerColor[2], 1);
-				} else {
-					gl.uniform4f(colorUniformLocation, lightCheckerColor[0], lightCheckerColor[1], lightCheckerColor[2], 1);
-				}
-			}
-		}
-	
-		for(var i = 0; i < 5; i++) {
-			for(var j = 0; j < 9; j++) {
-				if ((j + i * 9) == differentColorLocation2) {
-					if ((j + i * 9) % 2 == 0) {
-						gl.uniform4f(colorUniformLocation, lightDiffColor[0], lightDiffColor[1], lightDiffColor[2], 1);
-						drawDiamondFlower(j*122.19 - 1099.71, i*122.19);
-					} else {
-						gl.uniform4f(colorUniformLocation, darkDiffColor[0], darkDiffColor[1], darkDiffColor[2], 1);
-						drawTriangleFlower(j*122.19 - 1099.71, i*122.19);
-					}
-				} else {
-					if ((j + i * 9) % 2 == 0) {
-						gl.uniform4f(colorUniformLocation, lightFlowerColor[0], lightFlowerColor[1], lightFlowerColor[2], 1);
-						drawDiamondFlower(j*122.19 - 1099.71, i*122.19);
-					} else {
-						gl.uniform4f(colorUniformLocation, darkFlowerColor[0], darkFlowerColor[1], darkFlowerColor[2], 1);
-						drawTriangleFlower(j*122.19 - 1099.71, i*122.19);
-					}
-				}
-			}
-		}
-		
-		gl.uniform4f(colorUniformLocation, darkCheckerColor[0], darkCheckerColor[1], darkCheckerColor[2], 1);
+		drawScene();
 
 		// Get click position
 		var x = event.clientX;
@@ -333,107 +239,7 @@ window.onload = function init()
 
 function render() 
 {
-	// Animate if game is not stopped
-	if (!isStopped) {
-		currentposition = (leftToRight) ? currentposition + movement : currentposition - movement;
-		currentscale = (scaleUp) ? currentscale + scalefactor : currentscale - scalefactor;
-		angle = (counterclockwise) ? angle + 1.0 : angle - 1.0;
-	}
-	
-	if (currentposition > 1099.71) {
-		currentposition = 1099.71;
-		movement = -movement;
-		
-	}; 
-	if (currentposition < 0) {
-		currentposition = 0; 
-		movement = -movement;
-	}; 
-
-	if (currentscale > 0.35){
-		currentscale = 0.35;
-		scalefactor = -scalefactor;
-	};
-	
-	if (currentscale < 0.005){
-		currentscale = 0.005;
-		scalefactor = -scalefactor;
-	};
-
-	gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    gl.clear( gl.COLOR_BUFFER_BIT );
-
-	for(var i = 0; i < 5; i++) {
-		for(var j = 0; j < 9; j++) {
-			drawSquare(j*122.19, i*122.19);
-			if ((j + i * 9) % 2 == 0) {
-				gl.uniform4f(colorUniformLocation, lightCheckerColor[0], lightCheckerColor[1], lightCheckerColor[2], 1);
-			} else {
-				gl.uniform4f(colorUniformLocation, darkCheckerColor[0], darkCheckerColor[1], darkCheckerColor[2], 1)
-			}
-		}
-	}
-
-	for(var i = 0; i < 5; i++) {
-		for(var j = 0; j < 9; j++) {
-			if ((j + i * 9) == differentColorLocation1) {
-				if ((j + i * 9) % 2 == 0) {
-					gl.uniform4f(colorUniformLocation, darkDiffColor[0], darkDiffColor[1], darkDiffColor[2], 1);
-					drawTriangleFlower(j*122.19, i*122.19);
-				} else {
-					gl.uniform4f(colorUniformLocation, lightDiffColor[0], lightDiffColor[1], lightDiffColor[2], 1);
-					drawDiamondFlower(j*122.19, i*122.19);
-				}
-			} else {
-				if ((j + i * 9) % 2 == 0) {
-					gl.uniform4f(colorUniformLocation, darkFlowerColor[0], darkFlowerColor[1], darkFlowerColor[2], 1);
-					drawTriangleFlower(j*122.19, i*122.19);
-				} else {
-					gl.uniform4f(colorUniformLocation, lightFlowerColor[0], lightFlowerColor[1], lightFlowerColor[2], 1);
-					drawDiamondFlower(j*122.19, i*122.19);
-				}
-			}
-		}
-	}
-
-	gl.uniform4f(colorUniformLocation, lightCheckerColor[0], lightCheckerColor[1], lightCheckerColor[2], 1);
-
-	
-	for(var i = 0; i < 5; i++) {
-		for(var j = 0; j < 9; j++) {
-			drawSquare(j*122.19 - 1099.71, i*122.19);
-			if ((j + i * 9) % 2 == 0) {
-				gl.uniform4f(colorUniformLocation, darkCheckerColor[0], darkCheckerColor[1], darkCheckerColor[2], 1);
-			} else {
-				gl.uniform4f(colorUniformLocation, lightCheckerColor[0], lightCheckerColor[1], lightCheckerColor[2], 1);
-			}
-		}
-	}
-
-	for(var i = 0; i < 5; i++) {
-		for(var j = 0; j < 9; j++) {
-			if ((j + i * 9) == differentColorLocation2) {
-				if ((j + i * 9) % 2 == 0) {
-					gl.uniform4f(colorUniformLocation, lightDiffColor[0], lightDiffColor[1], lightDiffColor[2], 1);
-					drawDiamondFlower(j*122.19 - 1099.71, i*122.19);
-				} else {
-					gl.uniform4f(colorUniformLocation, darkDiffColor[0], darkDiffColor[1], darkDiffColor[2], 1);
-					drawTriangleFlower(j*122.19 - 1099.71, i*122.19);
-				}
-			} else {
-				if ((j + i * 9) % 2 == 0) {
-					gl.uniform4f(colorUniformLocation, lightFlowerColor[0], lightFlowerColor[1], lightFlowerColor[2], 1);
-					drawDiamondFlower(j*122.19 - 1099.71, i*122.19);
-				} else {
-					gl.uniform4f(colorUniformLocation, darkFlowerColor[0], darkFlowerColor[1], darkFlowerColor[2], 1);
-					drawTriangleFlower(j*122.19 - 1099.71, i*122.19);
-				}
-			}
-		}
-	}
-	
-	gl.uniform4f(colorUniformLocation, darkCheckerColor[0], darkCheckerColor[1], darkCheckerColor[2], 1);
-	
+	drawScene();
 	requestAnimationFrame(render); //refresh
 	
 }
@@ -492,10 +298,7 @@ function drawDiamondFlower(xtranslation, ytranslation) {
 	
     // Set the matrix.
     gl.uniformMatrix3fv(matrixLocation, false, matrix);
-
-	//gl.clear( gl.COLOR_BUFFER_BIT );
 	gl.drawArrays( primitiveType, offset, count );
-	
 	
 }
 
@@ -518,8 +321,6 @@ function drawSquare(xtranslation, ytranslation) {
 	
     // Set the matrix.
     gl.uniformMatrix3fv(matrixLocation, false, matrix);
-
-	//gl.clear( gl.COLOR_BUFFER_BIT );
 	gl.drawArrays( primitiveType, offset, count );
 	
 }
@@ -686,81 +487,165 @@ function setGeometry(gl, shape) {
 }
 
 function setColor(scheme) {
-	switch (scheme) {
-		case 1:                     // Define a cyan-red color scheme for canvas & sidebar.
-		  darkCheckerColor = [0.08, 0.89, 0.91];
-		  lightCheckerColor = [0.54, 0.91, 0.89];
-		  darkFlowerColor = [0.58, 0.02, 0.06];
-		  lightFlowerColor = [0.94, 0.03, 0.09];
-		  darkDiffColor = [148/255, 5/255, 66/255];
-		  lightDiffColor = [240/255, 8/255, 74/255];
-		  $('h1, .text, #hint-1, .timer-row').css({"color": '#14e3e8'});
-		  $('.win-message').css({"background-color": '#14e3e8'});
-		  $('.btn-custom, .btn-custom:hover, .btn-custom:focus, .btn-custom:active, .btn-custom:active:focus')
-		  	.css({"background-color": '#14e3e8'});
-		  $('.sidebar').css({"background-color": '#94060f'});
-		  $('.buttons-2, .win-message, #hint-2').css({"color": '#94060f'});
-		  $('.btn-custom, .btn-custom:hover, .btn-custom:focus, .btn-custom:active, .btn-custom:active:focus').css({"color": '#94060f'});
-		break;
-		case 2: 				// Define a pastel green-magenta color scheme for canvas & sidebar.
-		  darkCheckerColor = [0.16, 0.88, 0.73];
-		  lightCheckerColor = [0.74, 0.95, 0.85];
-		  darkFlowerColor = [0.71, 0.13, 0.64];
-		  lightFlowerColor = [0.97, 0.18, 0.88];
-		  darkDiffColor = [181/255, 34/255, 112/255];
-		  lightDiffColor = [247/255, 45/255, 173/255];
-		  $('h1, .text, #hint-1, .timer-row').css({"color": '#bdf2d9'});
-		  $('.win-message').css({"background-color": '#bdf2d9'});
-		  $('.btn-custom, .btn-custom:hover, .btn-custom:focus, .btn-custom:active, .btn-custom:active:focus')
-		  	.css({"background-color": '#bdf2d9'});
-		  $('.sidebar').css({"background-color": '#b522a4'});
-		  $('.buttons-2, .win-message, #hint-2').css({"color": '#b522a4'});
-		  $('.btn-custom, .btn-custom:hover, .btn-custom:focus, .btn-custom:active, .btn-custom:active:focus').css({"color": '#b522a4'});
-		break;
-		case 3: 				// Define a purple-peach color scheme for canvas & sidebar.
-		  darkCheckerColor = [0.37, 0.29, 0.54];
-		  lightCheckerColor = [0.49, 0.41, 0.66];
-		  darkFlowerColor = [0.90, 0.60, 0.55];
-		  lightFlowerColor = [0.96, 0.75, 0.71];
-		  darkDiffColor = [230/255, 154/255, 191/255];
-		  lightDiffColor = [245/255, 191/255, 232/255];
-		  $('h1, .text, #hint-1, .timer-row').css({"color": '#5f4b8b'});
-		  $('.win-message').css({"background-color": '#5f4b8b'});
-		  $('.btn-custom, .btn-custom:hover, .btn-custom:focus, .btn-custom:active, .btn-custom:active:focus')
-		  	.css({"background-color": '#5f4b8b'});
-		  $('.sidebar').css({"background-color": '#f5bfb5'});
-		  $('.buttons-2, .win-message, #hint-2').css({"color": '#f5bfb5'});
-		  $('.btn-custom, .btn-custom:hover, .btn-custom:focus, .btn-custom:active, .btn-custom:active:focus').css({"color": '#f5bfb5'});
-		break;
-		case 4: 				// Define a red-yellow color scheme for canvas & sidebar.
-	      darkCheckerColor = [0.66, 0.10, 0.04];
-		  lightCheckerColor = [0.98, 0.22, 0.13];
-		  darkFlowerColor = [0.99, 0.82, 0.05];
-		  lightFlowerColor = [0.93, 0.85, 0.48];
-		  darkDiffColor = [253/255, 210/255, 64/255];
-		  lightDiffColor = [237/255, 216/255, 173/255];
-		  $('h1, .text, #hint-1, .timer-row').css({"color": '#a81a0a'});
-		  $('.win-message').css({"background-color": '#a81a0a'});
-		  $('.btn-custom, .btn-custom:hover, .btn-custom:focus, .btn-custom:active, .btn-custom:active:focus')
-		  	.css({"background-color": '#a81a0a'});
-		  $('.sidebar').css({"background-color": '#fdd20e'});
-		  $('.buttons-2, .win-message, #hint-2').css({"color": '#fdd20e'});
-		  $('.btn-custom, .btn-custom:hover, .btn-custom:focus, .btn-custom:active, .btn-custom:active:focus').css({"color": '#fdd20e'});
-		break;
-		case 5: 				// Define a blue-green color scheme for canvas & sidebar.
-		  darkCheckerColor = [0.13, 0.31, 0.45];
-		  lightCheckerColor = [0.08, 0.44, 0.69];
-		  darkFlowerColor = [0.06, 0.97, 0.29];
-		  lightFlowerColor = [0.26, 1.00, 0.44];
-		  darkDiffColor = [15/255, 247/255, 23/255];
-		  lightDiffColor = [66/255, 255/255, 61/255];
-		  $('h1, .text, #hint-1, .timer-row').css({"color": '#205072'});
-		  $('.win-message').css({"background-color": '#205072'});
-		  $('.btn-custom, .btn-custom:hover, .btn-custom:focus, .btn-custom:active, .btn-custom:active:focus')
-		  	.css({"background-color": '#205072'});
-		  $('.sidebar').css({"background-color": '#0ff749'});
-		  $('.buttons-2, .win-message, #hint-2').css({"color": '#0ff749'});
-		  $('.btn-custom, .btn-custom:hover, .btn-custom:focus, .btn-custom:active, .btn-custom:active:focus').css({"color": '#0ff749'});
-		break;
+	var lightCSS;
+	var darkCSS;
+	if (scheme == 1) {
+		darkCheckerColor = [0.08, 0.89, 0.91];
+		lightCheckerColor = [0.54, 0.91, 0.89];
+		darkFlowerColor = [0.58, 0.02, 0.06];
+		lightFlowerColor = [0.94, 0.03, 0.09];
+		darkDiffColor = [148/255, 5/255, 66/255];
+		lightDiffColor = [240/255, 8/255, 74/255];
+		darkCSS = '#94060f';
+		lightCSS = '#14e3e8';
+	} else if (scheme == 2) {
+		darkCheckerColor = [0.16, 0.88, 0.73];
+		lightCheckerColor = [0.74, 0.95, 0.85];
+		darkFlowerColor = [0.71, 0.13, 0.64];
+		lightFlowerColor = [0.97, 0.18, 0.88];
+		darkDiffColor = [181/255, 34/255, 112/255];
+		lightDiffColor = [247/255, 45/255, 173/255];
+		darkCSS = '#b522a4';
+		lightCSS = '#bdf2d9';
+	} else if (scheme == 3) {
+		darkCheckerColor = [0.37, 0.29, 0.54];
+		lightCheckerColor = [0.49, 0.41, 0.66];
+		darkFlowerColor = [0.90, 0.60, 0.55];
+		lightFlowerColor = [0.96, 0.75, 0.71];
+		darkDiffColor = [230/255, 154/255, 191/255];
+		lightDiffColor = [245/255, 191/255, 232/255];
+		darkCSS = '#f5bfb5';
+		lightCSS = '#5f4b8b';
+	} else if (scheme == 4) {
+		darkCheckerColor = [0.66, 0.10, 0.04];
+		lightCheckerColor = [0.98, 0.22, 0.13];
+		darkFlowerColor = [0.99, 0.82, 0.05];
+		lightFlowerColor = [0.93, 0.85, 0.48];
+		darkDiffColor = [253/255, 210/255, 64/255];
+		lightDiffColor = [237/255, 216/255, 173/255];
+		darkCSS = '#fdd20e';
+		lightCSS = '#a81a0a';
+	} else if (scheme == 5) {
+		darkCheckerColor = [0.13, 0.31, 0.45];
+		lightCheckerColor = [0.08, 0.44, 0.69];
+		darkFlowerColor = [0.06, 0.97, 0.29];
+		lightFlowerColor = [0.26, 1.00, 0.44];
+		darkDiffColor = [15/255, 247/255, 23/255];
+		lightDiffColor = [66/255, 255/255, 61/255];
+		darkCSS = '#0ff749';
+		lightCSS = '#205072';
 	}
-  }
+	$('h1, .text, #hint-1, .timer-row, .credit').css({"color": `${lightCSS}`});
+	$('.win-message').css({"background-color": `${lightCSS}`});
+	$('.btn-custom, .btn-custom:hover, .btn-custom:focus, .btn-custom:active, .btn-custom:active:focus')
+		.css({"background-color": `${lightCSS}`});
+	$('.sidebar, .credit .hint').css({"background-color": `${darkCSS}`});
+	$('.buttons-2, .win-message, #hint-2').css({"color": `${darkCSS}`});
+	$('.btn-custom, .btn-custom:hover, .btn-custom:focus, .btn-custom:active, .btn-custom:active:focus').css({"color": `${darkCSS}`});
+}
+
+  function drawScene() {
+	// Animate if game is not stopped
+	if (!isStopped) {
+		currentposition = (leftToRight) ? currentposition + movement : currentposition - movement;
+		currentscale = (scaleUp) ? currentscale + scalefactor : currentscale - scalefactor;
+		angle = (counterclockwise) ? angle + 1.0 : angle - 1.0;
+	}
+	
+	if (currentposition > 1099.71) {
+		currentposition = 1099.71;
+		movement = -movement;
+		
+	}; 
+	if (currentposition < 0) {
+		currentposition = 0; 
+		movement = -movement;
+	}; 
+
+	if (currentscale > 0.35){
+		currentscale = 0.35;
+		scalefactor = -scalefactor;
+	};
+	
+	if (currentscale < 0.005){
+		currentscale = 0.005;
+		scalefactor = -scalefactor;
+	};
+
+	gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.clear( gl.COLOR_BUFFER_BIT );
+
+	// Draw checkered background
+	for(var i = 0; i < 5; i++) {
+		for(var j = 0; j < 9; j++) {
+			drawSquare(j*122.19, i*122.19);
+			if ((j + i * 9) % 2 == 0) {
+				gl.uniform4f(colorUniformLocation, lightCheckerColor[0], lightCheckerColor[1], lightCheckerColor[2], 1);
+			} else {
+				gl.uniform4f(colorUniformLocation, darkCheckerColor[0], darkCheckerColor[1], darkCheckerColor[2], 1)
+			}
+		}
+	}
+
+	// Draw flowers
+	for(var i = 0; i < 5; i++) {
+		for(var j = 0; j < 9; j++) {
+			if ((j + i * 9) == differentColorLocation1) {
+				if ((j + i * 9) % 2 == 0) {
+					gl.uniform4f(colorUniformLocation, darkDiffColor[0], darkDiffColor[1], darkDiffColor[2], 1);
+					drawTriangleFlower(j*122.19, i*122.19);
+				} else {
+					gl.uniform4f(colorUniformLocation, lightDiffColor[0], lightDiffColor[1], lightDiffColor[2], 1);
+					drawDiamondFlower(j*122.19, i*122.19);
+				}
+			} else {
+				if ((j + i * 9) % 2 == 0) {
+					gl.uniform4f(colorUniformLocation, darkFlowerColor[0], darkFlowerColor[1], darkFlowerColor[2], 1);
+					drawTriangleFlower(j*122.19, i*122.19);
+				} else {
+					gl.uniform4f(colorUniformLocation, lightFlowerColor[0], lightFlowerColor[1], lightFlowerColor[2], 1);
+					drawDiamondFlower(j*122.19, i*122.19);
+				}
+			}
+		}
+	}
+
+	gl.uniform4f(colorUniformLocation, lightCheckerColor[0], lightCheckerColor[1], lightCheckerColor[2], 1);
+
+	// Draw checkered background for leftmost part
+	for(var i = 0; i < 5; i++) {
+		for(var j = 0; j < 9; j++) {
+			drawSquare(j*122.19 - 1099.71, i*122.19);
+			if ((j + i * 9) % 2 == 0) {
+				gl.uniform4f(colorUniformLocation, darkCheckerColor[0], darkCheckerColor[1], darkCheckerColor[2], 1);
+			} else {
+				gl.uniform4f(colorUniformLocation, lightCheckerColor[0], lightCheckerColor[1], lightCheckerColor[2], 1);
+			}
+		}
+	}
+
+	// Draw flowers for leftmost part
+	for(var i = 0; i < 5; i++) {
+		for(var j = 0; j < 9; j++) {
+			if ((j + i * 9) == differentColorLocation2) {
+				if ((j + i * 9) % 2 == 0) {
+					gl.uniform4f(colorUniformLocation, lightDiffColor[0], lightDiffColor[1], lightDiffColor[2], 1);
+					drawDiamondFlower(j*122.19 - 1099.71, i*122.19);
+				} else {
+					gl.uniform4f(colorUniformLocation, darkDiffColor[0], darkDiffColor[1], darkDiffColor[2], 1);
+					drawTriangleFlower(j*122.19 - 1099.71, i*122.19);
+				}
+			} else {
+				if ((j + i * 9) % 2 == 0) {
+					gl.uniform4f(colorUniformLocation, lightFlowerColor[0], lightFlowerColor[1], lightFlowerColor[2], 1);
+					drawDiamondFlower(j*122.19 - 1099.71, i*122.19);
+				} else {
+					gl.uniform4f(colorUniformLocation, darkFlowerColor[0], darkFlowerColor[1], darkFlowerColor[2], 1);
+					drawTriangleFlower(j*122.19 - 1099.71, i*122.19);
+				}
+			}
+		}
+	}
+	
+	gl.uniform4f(colorUniformLocation, darkCheckerColor[0], darkCheckerColor[1], darkCheckerColor[2], 1);
+  };

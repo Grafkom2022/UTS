@@ -7,11 +7,11 @@
 }
 h1, h2 {
     padding-left: 0.1em;
-    padding-bottom: 0.1em;
     font-family: 'Yeseva One', cursive;
 }
 h1 {
     padding-top: 0.4em;
+    padding-bottom: 0.1em;
     font-size: 2.6rem;
 }
 h2 {
@@ -55,7 +55,7 @@ h2 {
 .win-message {
     margin-top: 0.9em;
     padding-left: 0.1em;
-    padding-bottom: 0.9em;
+    padding-bottom: 0.8em;
     padding-right: 0.1em;
     font-family: 'News Cycle', sans-serif;
     letter-spacing: 2px;
@@ -65,4 +65,14 @@ h2 {
 }
 .stats {
     padding-left: 0.8em;
+}
+.credit .hint{
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+    padding-top: 0;
+    min-width: 123.8em;
+    max-width: 123.8em;
+    margin-left: -0.8em;
+    text-align: center;
 }

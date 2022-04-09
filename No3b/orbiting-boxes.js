@@ -56,6 +56,11 @@ var positionLocation;
 var colorBuffer;
 var colorLocation;
 
+// Select initial camera position
+$(document).ready(function(){
+	$("#default-cam").css({"background-color" : "#7062bf"});
+});
+
 window.onload = function init()
 {
   canvas = document.getElementById( "gl-canvas" );
@@ -103,7 +108,7 @@ window.onload = function init()
 		cameraID = 0;
     position = [0, 0, 0];
     $(".btn").css({"background-color" : "#9381ff"});
-    $("#default-cam").css({"background-color" : "#7062bf"})
+    $("#default-cam").css({"background-color" : "#7062bf"});
 	});
   document.getElementById("O-cam").addEventListener("click", function() {
 		cameraID = 1;
