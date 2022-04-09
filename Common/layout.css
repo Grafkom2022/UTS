@@ -3,7 +3,6 @@
 }
 
 body {
-  font-family: Arial;
   padding: 10px;
   background: #f1f1f1;
   text-align: center;
@@ -11,10 +10,14 @@ body {
 
 /* Header/Blog Title */
 .header {
+  font-family:'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 2em;
+  border-radius: 0.5em;
   padding: 20px;
   text-align: center;
-  color: yellow;
-  background: rgb(1, 5, 250);
+  color: #9381ff;
+  background: #d1d1ff;
   margin-bottom: 5px;
 }
 

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="style.css">
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=News+Cycle:wght@400;700&family=Yeseva+One&display=swap" rel="stylesheet">
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+  $(document).ready(function(){
+      $('[data-toggle="tooltip"]').tooltip({
+          trigger : 'hover'
+      });
+  });
+  </script>
+<title>Spot The Difference</title>
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+#version 300 es
+
+in vec2 vPosition;
+
+uniform mat3 u_matrix;
+
+
+void
+main()
+{
+  // Multiply the position by the matrix.
+  gl_Position = vec4((u_matrix * vec3(vPosition, 1)).xy, 0, 1);
+
+}
+
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+#version 300 es
+
+precision mediump float;
+
+out vec4 FragColor;
+uniform vec4 u_color;
+
+void
+main()
+{
+    FragColor = u_color;
+}
+</script>
+
+<script src="../Common/initShaders.js"></script>
+    <script src="../Common/MVnew.js"></script>
+    <script src="spotthedifference.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-9 main">
+        <canvas id="gl-canvas" width="1099.71" height="610.95">
+          Oops ... your browser doesn't support the HTML5 canvas element
+        </canvas>
+      </div>
+      <div class="col-3 sidebar">
+        <h1>
+          Spot The Difference
+        </h1>
+        <div class="text">
+          Some of these flowers are not like the others. Try to find one of them. Or maybe just sit back and watch them dance :)
+        </div>
+        <div class="hint" id="hint-1">
+          Hint: Click on the flower petals, not the squares.
+        </div>
+        <div class="win-message" id="win-message" hidden>
+          <h2>
+            You Win!
+          </h2>
+          <div class="stats" id="stats">
+            Time:<br>
+            Best Time:<br>
+          </div>
+          <div class="hint" id="hint-2">
+            Click the play button to play again.
+          </div>
+        </div>
+        <div class="container bottom">
+          <div class="row timer-row">
+            <div class="col-3">
+              Time:
+            </div>
+            <div class="col">
+              
+            </div>
+            <div class="col-3 timer" id="timer">
+              0s
+            </div>
+          </div>
+          <div class="row buttons-1">
+            <div class="col-3">
+              <button type="button" class="btn btn-custom" id="translation" data-toggle="tooltip" data-placement="bottom" title="Change horizontal direction">
+                <i class="bi bi-arrow-left-right"></i>
+              </button>
+            </div>
+            <div class="col-3">
+              <button type="button" class="btn btn-custom" id="rotation" data-toggle="tooltip" data-placement="bottom" title="Change rotation direction">
+                <i class="bi bi-arrow-repeat"></i>
+              </button>
+            </div>
+            <div class="col-3">
+              <button type="button" class="btn btn-custom" id="scale" data-toggle="tooltip" data-placement="bottom" title="Change scaling direction">
+                <i class="bi bi-arrows-angle-expand"></i>
+              </button>
+            </div>
+            <div class="col-3">
+              <button type="button" class="btn btn-custom disabled" id="play" aria-disabled="true" data-toggle="tooltip" data-placement="bottom" title="Start game">
+                <i class="bi bi-play"></i>
+              </button>
+            </div>  
+          </div>
+          <div class="row buttons-2">
+            <div class="col-12">
+              <button type="button" class="btn btn-custom change-color" id="color">
+                Change color
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row credit">
+      <div class="hint">
+        Made by Fathan Muhammad - 2006486090 & Razita Afrina Nuriyan - 2006529360
+			  for UTS Grafika Komputer Fasilkom UI 2022
+      </div>
+    </div>
+  </div>
+</body>
+</html>
